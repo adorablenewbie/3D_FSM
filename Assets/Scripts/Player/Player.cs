@@ -12,6 +12,8 @@ public class Player : MonoBehaviour
 
     public ForceReceiver ForceReceiver { get; private set; }
 
+    public Health health { get; private set; }
+
     private PlayerStateMachine stateMachine;
 
     private void Awake()
@@ -24,12 +26,14 @@ public class Player : MonoBehaviour
 
         stateMachine = new PlayerStateMachine(this);
         ForceReceiver = GetComponent<ForceReceiver>();
+        health = GetComponent<Health>();
     }
 
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         stateMachine.ChangeState(stateMachine.IdleState); //<< 얘가 문제임ㅋㅋㅋㅋㅋㅋㅋㅋ
+        health.OnDie += OnDie;
     }
 
     private void Update()
@@ -41,5 +45,11 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         stateMachine.PhysicsUpdate();
+    }
+
+    void OnDie()
+    {
+        Animator.SetTrigger("Die");
+        enabled = false;
     }
 }
