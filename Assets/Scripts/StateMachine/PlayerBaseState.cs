@@ -14,11 +14,27 @@ public class PlayerBaseState : IState
 
     public virtual void Enter()
     {
-
+        AddInputActionsCallbacks();
     }
 
     public virtual void Exit()
     {
+        RemoveInputActionsCallbacks();
+    }
+
+    protected virtual void AddInputActionsCallbacks()
+    {
+        Debug.Log($"{stateMachine.Player.Input}");
+        PlayerController input = stateMachine.Player.Input;
+        input.playerActions.Movement.canceled += OnMovementCanceled;
+        input.playerActions.Run.started += OnRunStarted;
+    }
+
+    protected virtual void RemoveInputActionsCallbacks()
+    {
+        PlayerController input = stateMachine.Player.Input;
+        input.playerActions.Movement.canceled -= OnMovementCanceled;
+        input.playerActions.Run.started -= OnRunStarted;
 
     }
 
@@ -37,6 +53,16 @@ public class PlayerBaseState : IState
         // StartAnimation 함수 먼저 작성
         Move();
     }
+
+    protected virtual void OnMovementCanceled(InputAction.CallbackContext context)
+   {
+
+   }
+
+   protected virtual void OnRunStarted(InputAction.CallbackContext context)
+   {
+
+   }
 
     protected void StartAnimation(int animationHash)
     {
@@ -102,4 +128,6 @@ public class PlayerBaseState : IState
             playerTransform.rotation = Quaternion.Slerp(playerTransform.rotation, targetRotation, stateMachine.RotationDamping * Time.deltaTime);
         }
     }
+
+
 }

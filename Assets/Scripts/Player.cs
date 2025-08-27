@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 
 public class Player : MonoBehaviour
@@ -15,18 +15,18 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         AnimationData.Initialize();
-        // ��������
+        // 수정사항
         Animator = GetComponentInChildren<Animator>();
         Input = GetComponent<PlayerController>();
         Controller = GetComponent<CharacterController>();
 
         stateMachine = new PlayerStateMachine(this);
-        stateMachine.ChangeState(stateMachine.IdleState);
     }
 
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+        stateMachine.ChangeState(stateMachine.IdleState); //<< 얘가 문제임ㅋㅋㅋㅋㅋㅋㅋㅋ
     }
 
     private void Update()

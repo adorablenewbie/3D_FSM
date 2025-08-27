@@ -7,7 +7,6 @@ public class PlayerStateMachine : StateMachine
     public Player Player { get; }
 
     // 수정사항
-    public PlayerIdleState IdleState { get; }
 
     public Vector2 MovementInput { get; set; }
     public float MovementSpeed { get; private set; }
@@ -18,12 +17,18 @@ public class PlayerStateMachine : StateMachine
 
     public Transform MainCameraTransform { get; set; }
 
+    public PlayerIdleState IdleState { get; private set; }
+    public PlayerWalkState WalkState { get; private set; }
+    public PlayerRunState RunState { get; private set; }
+
     public PlayerStateMachine(Player player)
     {
         this.Player = player;
 
-        // 수정사항
         IdleState = new PlayerIdleState(this);
+        // 수정사항
+        WalkState = new PlayerWalkState(this);
+        RunState = new PlayerRunState(this);
 
         MainCameraTransform = Camera.main.transform;
 

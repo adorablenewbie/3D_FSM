@@ -11,7 +11,7 @@ public class PlayerGroundedState : PlayerBaseState
 
     public override void Enter()
     {
-        base.Enter();
+        base.Enter();           
         StartAnimation(stateMachine.Player.AnimationData.GroundParameterHash);
     }
 
@@ -29,5 +29,18 @@ public class PlayerGroundedState : PlayerBaseState
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
+    }
+    protected override void OnMovementCanceled(InputAction.CallbackContext context)
+    {
+        if (stateMachine.MovementInput == Vector2.zero)
+        {
+            Debug.Log("1");
+            return;
+        }
+
+        Debug.Log("2");
+        stateMachine.ChangeState(stateMachine.IdleState);
+
+        base.OnMovementCanceled(context);
     }
 }
