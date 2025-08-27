@@ -6,6 +6,9 @@ public class PlayerStateMachine : StateMachine
 {
     public Player Player { get; }
 
+    // 수정사항
+    public PlayerIdleState IdleState { get; }
+
     public Vector2 MovementInput { get; set; }
     public float MovementSpeed { get; private set; }
     public float RotationDamping { get; private set; }
@@ -19,9 +22,12 @@ public class PlayerStateMachine : StateMachine
     {
         this.Player = player;
 
+        // 수정사항
+        IdleState = new PlayerIdleState(this);
+
         MainCameraTransform = Camera.main.transform;
 
-        MovementSpeed = player.Data.GroundData.BaseSpeed;
-        RotationDamping = player.Data.GroundData.BaseRotationDamping;
+        MovementSpeed = player.Data.GroundedData.BaseSpeed;
+        RotationDamping = player.Data.GroundedData.BaseRotationDamping;
     }
 }

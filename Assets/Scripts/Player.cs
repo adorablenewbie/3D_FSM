@@ -1,5 +1,6 @@
 using UnityEngine;
 
+
 public class Player : MonoBehaviour
 {
     [field: Header("Animations")]
@@ -9,17 +10,33 @@ public class Player : MonoBehaviour
     public PlayerController Input { get; private set; }
     public CharacterController Controller { get; private set; }
 
+    private PlayerStateMachine stateMachine;
+
     private void Awake()
     {
         AnimationData.Initialize();
-
-        Animator = GetComponent<Animator>();
+        // 수정사항
+        Animator = GetComponentInChildren<Animator>();
         Input = GetComponent<PlayerController>();
         Controller = GetComponent<CharacterController>();
+
+        stateMachine = new PlayerStateMachine(this);
+        stateMachine.ChangeState(stateMachine.IdleState);
     }
 
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    private void Update()
+    {
+        stateMachine.HandleInput();
+        stateMachine.Update();
+    }
+
+    private void FixedUpdate()
+    {
+        stateMachine.PhysicsUpdate();
     }
 }
