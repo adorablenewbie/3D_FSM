@@ -20,6 +20,7 @@ public class PlayerStateMachine : StateMachine
     public PlayerIdleState IdleState { get; private set; }
     public PlayerWalkState WalkState { get; private set; }
     public PlayerRunState RunState { get; private set; }
+    public PlayerJumpState JumpState { get; }
 
     public PlayerStateMachine(Player player)
     {
@@ -29,6 +30,7 @@ public class PlayerStateMachine : StateMachine
         // 수정사항
         WalkState = new PlayerWalkState(this);
         RunState = new PlayerRunState(this);
+        JumpState = new PlayerJumpState(this);
 
         MainCameraTransform = Camera.main.transform;
 
