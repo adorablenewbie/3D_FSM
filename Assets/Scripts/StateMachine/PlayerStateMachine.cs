@@ -21,6 +21,7 @@ public class PlayerStateMachine : StateMachine
     public PlayerWalkState WalkState { get; private set; }
     public PlayerRunState RunState { get; private set; }
     public PlayerJumpState JumpState { get; }
+    public PlayerFallState FallState { get; }
 
     public PlayerStateMachine(Player player)
     {
@@ -31,6 +32,7 @@ public class PlayerStateMachine : StateMachine
         WalkState = new PlayerWalkState(this);
         RunState = new PlayerRunState(this);
         JumpState = new PlayerJumpState(this);
+        FallState = new PlayerFallState(this);
 
         MainCameraTransform = Camera.main.transform;
 

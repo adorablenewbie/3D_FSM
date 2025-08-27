@@ -33,4 +33,14 @@ public class PlayerJumpState : PlayerAirState
             return;
         }
     }
+    public override void PhysicsUpdate()
+    {
+        base.PhysicsUpdate();
+
+        if (stateMachine.Player.Controller.velocity.y <= 0)
+        {
+            stateMachine.ChangeState(stateMachine.FallState);
+            return;
+        }
+    }
 }
