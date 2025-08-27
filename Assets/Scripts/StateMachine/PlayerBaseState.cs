@@ -9,7 +9,7 @@ public class PlayerBaseState : IState
     public PlayerBaseState(PlayerStateMachine playerStateMachine)
     {
         stateMachine = playerStateMachine;
-        groundData = stateMachine.Player.Data.GroundedData;
+        groundData = stateMachine.Player.Data.GroundData;
     }
 
     public virtual void Enter()
@@ -30,6 +30,9 @@ public class PlayerBaseState : IState
         input.playerActions.Run.started += OnRunStarted;
 
         stateMachine.Player.Input.playerActions.Jump.started += OnJumpStarted;
+
+        stateMachine.Player.Input.playerActions.Attack.performed += OnAttackPerformed;
+        stateMachine.Player.Input.playerActions.Attack.canceled += OnAttackCanceled;
     }
 
     protected virtual void RemoveInputActionsCallbacks()
@@ -39,6 +42,9 @@ public class PlayerBaseState : IState
         input.playerActions.Run.started -= OnRunStarted;
 
         stateMachine.Player.Input.playerActions.Jump.started -= OnJumpStarted;
+
+        stateMachine.Player.Input.playerActions.Attack.performed -= OnAttackPerformed;
+        stateMachine.Player.Input.playerActions.Attack.canceled -= OnAttackCanceled;
     }
 
     protected virtual void OnJumpStarted(InputAction.CallbackContext context)
@@ -71,6 +77,16 @@ public class PlayerBaseState : IState
    {
 
    }
+
+    protected virtual void OnAttackPerformed(InputAction.CallbackContext obj)
+    {
+        stateMachine.IsAttacking = true;
+    }
+
+    protected virtual void OnAttackCanceled(InputAction.CallbackContext obj)
+    {
+        stateMachine.IsAttacking = false;
+    }
 
     protected void StartAnimation(int animationHash)
     {
@@ -123,6 +139,11 @@ public class PlayerBaseState : IState
         );
     }
 
+    protected void ForceMove()
+    {
+        stateMachine.Player.Controller.Move(stateMachine.Player.ForceReceiver.Movement * Time.deltaTime);
+    }
+
     private float GetMovementSpeed()
     {
         float moveSpeed = stateMachine.MovementSpeed * stateMachine.MovementSpeedModifier;
@@ -139,5 +160,22 @@ public class PlayerBaseState : IState
         }
     }
 
+    protected float GetNormalizedTime(Animator animator, string tag)
+    {
+        AnimatorStateInfo currentInfo = animator.GetCurrentAnimatorStateInfo(0);
+        AnimatorStateInfo nextInfo = animator.GetNextAnimatorStateInfo(0);
 
+        if (animator.IsInTransition(0) && nextInfo.IsTag(tag))
+        {
+            return nextInfo.normalizedTime;
+        }
+        else if (!animator.IsInTransition(0) && currentInfo.IsTag(tag))
+        {
+            return currentInfo.normalizedTime;
+        }
+        else
+        {
+            return 0f;
+        }
+    }
 }

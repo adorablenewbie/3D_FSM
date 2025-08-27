@@ -22,6 +22,10 @@ public class PlayerStateMachine : StateMachine
     public PlayerRunState RunState { get; private set; }
     public PlayerJumpState JumpState { get; }
     public PlayerFallState FallState { get; }
+    public bool IsAttacking { get; set; }
+    public int ComboIndex { get; set; }
+
+    public PlayerComboAttackState ComboAttackState { get; }
 
     public PlayerStateMachine(Player player)
     {
@@ -34,9 +38,11 @@ public class PlayerStateMachine : StateMachine
         JumpState = new PlayerJumpState(this);
         FallState = new PlayerFallState(this);
 
+        ComboAttackState = new PlayerComboAttackState(this);
+
         MainCameraTransform = Camera.main.transform;
 
-        MovementSpeed = player.Data.GroundedData.BaseSpeed;
-        RotationDamping = player.Data.GroundedData.BaseRotationDamping;
+        MovementSpeed = player.Data.GroundData.BaseSpeed;
+        RotationDamping = player.Data.GroundData.BaseRotationDamping;
     }
 }
